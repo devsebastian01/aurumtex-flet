@@ -1,0 +1,38 @@
+"""
+    CREATE TABLE IF NOT EXISTS roll (
+    uuid VARCHAR(50) PRIMARY KEY,
+    item VARCHAR(50) NOT NULL,
+    roll INT NOT NULL,
+    color VARCHAR(50) NOT NULL,
+    siigo_code VARCHAR(50) NOT NULL,
+    mts FLOAT NOT NULL,
+    kg FLOAT NOT NULL,
+    container VARCHAR(50) NOT NULL,
+    checked BOOLEAN NOT NULL
+);
+"""
+
+"""
+CREATE TABLE IF NOT EXISTS client (
+    uuid VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    nit_client VARCHAR(50) NOT NULL
+);
+"""
+
+"""
+CREATE TABLE IF NOT EXISTS invoice (
+    uuid VARCHAR(50) PRIMARY KEY,
+    id_invoice VARCHAR(50) NOT NULL,
+    date VARCHAR(50),
+    checked BOOLEAN NOT NULL
+);
+"""
+
+"""
+CREATE TABLE IF NOT EXISTS invoice_roll (
+    uuid VARCHAR(50) PRIMARY KEY,
+    uuid_client VARCHAR(50) NOT NULL REFERENCES client(uuid),
+    uuid_roll VARCHAR(50) NOT NULL REFERENCES roll(uuid)
+);
+"""
