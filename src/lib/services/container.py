@@ -1,6 +1,4 @@
-
-from src.lib.db.db_connection import connection_db
-from src.utils.handle_bd import save_rolls_to_db
+from src.lib.db.repositories.roll_repository import save_rolls_to_db
 from src.utils.zpl import generate_zpl_pair, generate_zpl_single
 from itertools import zip_longest
 # import impresora

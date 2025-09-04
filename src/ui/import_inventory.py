@@ -1,5 +1,5 @@
 import flet as ft
-from src.utils.handle_bd import get_list_import_rolls
+from src.lib.db.repositories.roll_repository import get_list_import_rolls
 
 def import_inventory_view(connection_db):
     

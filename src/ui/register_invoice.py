@@ -1,9 +1,7 @@
 import flet as ft
-from src.lib.invoices import register_invoice, retry_failed
-from src.utils.handle_bd import (
-    get_list_import_rolls,
-    get_uuid_client_by_nit,
-)
+from src.lib.services.invoice import register_invoice, retry_failed
+from src.lib.db.repositories.roll_repository import get_list_import_rolls
+from src.lib.db.repositories.client_repository import get_uuid_client_by_nit
 
 def register_invoice_view(connection_db, conn_factory):
     rolls_cache = {r["uuid"]: r for r in get_list_import_rolls(connection_db)}

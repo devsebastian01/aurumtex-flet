@@ -1,0 +1,7 @@
+flet
+reportlab
+pandas
+pywin32
+python-dotenv
+psycopg2
+openpyxl

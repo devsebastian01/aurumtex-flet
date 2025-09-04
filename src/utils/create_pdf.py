@@ -17,8 +17,8 @@ def create_non_group_invoice_pdf(nit, client, list_rolls, path_folder):
     elements = []
 
     # Título
-    elements.append(Paragraph("Nota de entrega", style_heading))
-    elements.append(Paragraph(f"NIT: {nit}", style_normal))
+    elements.append(Paragraph("Factura", style_heading))
+    elements.append(Paragraph(f"Cliente: {client}", style_normal))
     elements.append(Spacer(1, 12))
 
     # Encabezado y datos de tabla
@@ -50,7 +50,7 @@ def create_non_group_invoice_pdf(nit, client, list_rolls, path_folder):
 
 
 
-def create_group_invoice_pdf(client_nit: str, client: str, color_group: dict, path_folder: str, note_number):
+def create_group_invoice_pdf(address: str, client: str, color_group: dict, path_folder: str, note_number):
 
     # Crear directorio si no existe
     os.makedirs(path_folder, exist_ok=True)
@@ -91,7 +91,8 @@ def create_group_invoice_pdf(client_nit: str, client: str, color_group: dict, pa
     delivery_basic_info = [
         ["NOTA DE ENTREGA:", note_number],
         ["FECHA:", today],
-        ["ITC:", ""]
+        ["CLIENTE:", client],
+        ["DIRECCION:", address]
     ]
     delivery_basic_table = Table(delivery_basic_info, colWidths=[150, 100])
     delivery_basic_table.setStyle(TableStyle([

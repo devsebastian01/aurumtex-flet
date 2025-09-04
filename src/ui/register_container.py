@@ -1,4 +1,4 @@
-from src.lib.container import register_container
+from src.lib.services.container import register_container
 from src.utils.read_excel import read_excel_by_headers
 from src.utils.normalize import normalize_headers
 import flet as ft

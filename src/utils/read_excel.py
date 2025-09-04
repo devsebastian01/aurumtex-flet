@@ -59,3 +59,24 @@ def read_excel_by_headers(headers_model: list, document_files: list[str]):
         list_dict_excels = dict_str_list
 
     return list_dict_excels
+
+
+def read_general_excel_to_list(path_file: str) -> list[dict]:
+    list_dict_index = []
+
+    if path_file.endswith('.xlsx'):
+        xls = pd.ExcelFile(path_file, engine='openpyxl')
+    else:
+        xls = pd.ExcelFile(path_file)
+    for sheet_name in xls.sheet_names:
+        df = pd.read_excel(xls, sheet_name=sheet_name, dtype=str)
+        df = df.fillna("")
+        # df = xls.parse(sheet_name)
+        list_dict_index.append(df.to_dict('index'))
+    if len(list_dict_index) <= 0:
+        return []
+    list_dict = []
+    for i in list_dict_index[0].keys():
+        list_dict.append(list_dict_index[0][i])
+
+    return list_dict

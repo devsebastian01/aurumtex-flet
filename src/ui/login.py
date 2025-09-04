@@ -1,5 +1,5 @@
 import flet as ft
-from src.lib.auth import authenticate
+from src.lib.services.auth import authenticate
 
 
 def login_view(page: ft.Page, on_success, connection):
