@@ -4,19 +4,33 @@ from psycopg2.extras import execute_values
 
 
 # Extrae todos los rollos de la bd y los convierte en un dict
-def get_list_import_rolls(connection_db):
+def get_list_import_rolls(connection_db, page: int = 0, page_size: int = 200):
     try:
-        
         cursor = connection_db.cursor()
-        cursor.execute("SELECT * FROM roll")
+
+        # Total de filas
+        cursor.execute("SELECT COUNT(*) FROM roll")
+        total = cursor.fetchone()[0]
+
+        # Paginado con solo columnas necesarias
+        cursor.execute(
+            """
+            SELECT uuid, item, roll, color, siigo_code, mts, kg, container, checked
+            FROM roll
+            ORDER BY uuid
+            LIMIT %s OFFSET %s
+            """,
+            (page_size, page * page_size)
+        )
         col_names = [desc[0] for desc in cursor.description]
         rows = cursor.fetchall()
         result = [dict(zip(col_names, row)) for row in rows]
-        return result
+        return result, total
     except Exception as e:
         connection_db.rollback()
         print(f"Info: Listado de rollos [Fallido]: {e}")
-        return []
+        return [], 0
+
 
 
 # Guarda una lista de rollos en la bd

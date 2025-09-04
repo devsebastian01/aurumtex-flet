@@ -1,10 +1,15 @@
 import flet as ft
 from src.lib.db.repositories.roll_repository import get_list_import_rolls
 
+
 def import_inventory_view(connection_db):
-    
     all_inventory_data = []
     inventory_data = []
+
+    # Estado de paginación
+    current_page = 0
+    page_size = 200
+    total_rows = 0
 
     # Variables globales para el modal
     edit_modal = None
@@ -17,7 +22,7 @@ def import_inventory_view(connection_db):
     container_input = None
     current_record = None
 
-    # 🔹 Contenedor dinámico que primero muestra "Cargando..."
+    # 🔹 Contenedor dinámico
     content_area = ft.Column(
         expand=True,
         alignment=ft.MainAxisAlignment.CENTER,
@@ -94,7 +99,6 @@ def import_inventory_view(connection_db):
                                         tooltip="Editar",
                                         on_click=lambda e, rec=record: open_edit_modal(e, rec),
                                     ),
-                                    
                                 ]
                             )
                         ),
@@ -201,11 +205,10 @@ def import_inventory_view(connection_db):
     )
     edit_modal.open = False
 
-    # 🔹 Carga de datos
+    # 🔹 Carga de datos con paginación
     async def load_data():
-        
-        nonlocal all_inventory_data, inventory_data
-        all_inventory_data = get_list_import_rolls(connection_db = connection_db)
+        nonlocal all_inventory_data, inventory_data, total_rows
+        all_inventory_data, total_rows = get_list_import_rolls(connection_db, current_page, page_size)
         inventory_data = all_inventory_data.copy()
 
         content_area.controls.clear()
@@ -225,6 +228,28 @@ def import_inventory_view(connection_db):
         render_table(layout.page)
         layout.page.update()
 
+    # Controles de paginación
+    def go_prev(e):
+        nonlocal current_page
+        if current_page > 0:
+            current_page -= 1
+            layout.page.run_task(load_data)
+
+    def go_next(e):
+        nonlocal current_page
+        if (current_page + 1) * page_size < total_rows:
+            current_page += 1
+            layout.page.run_task(load_data)
+
+    pagination_controls = ft.Row(
+        controls=[
+            ft.ElevatedButton("Anterior", on_click=go_prev),
+            ft.Text(f"Página {current_page+1}", color="black"),
+            ft.ElevatedButton("Siguiente", on_click=go_next),
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+    )
+
     layout = ft.Column(
         controls=[
             ft.Text("Inventario Contenedores", size=22, weight=ft.FontWeight.BOLD, color="black"),
@@ -233,7 +258,8 @@ def import_inventory_view(connection_db):
                 padding=10,
             ),
             content_area,
-            edit_modal
+            pagination_controls,
+            edit_modal,
         ],
         expand=True
     )
